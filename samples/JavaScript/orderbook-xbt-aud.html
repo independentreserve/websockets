@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    <title>Independent Reserve WebSockets Demo</title>
+    <script>
+        var webSocket = new WebSocket('wss://websockets.independentreserve.com/orderbook-xbt-aud');
+
+        webSocket.onopen = function () {
+            console.log('Connected');
+        };
+
+        webSocket.onerror = function () {
+            console.log('Error');
+			document.getElementById('status').innerText = 'Error - Reload to re-connect';
+        };
+
+        webSocket.onclose = function () {
+            console.log('Disconnect');
+			document.getElementById('status').innerText = 'Disconnected - Reload to re-connect';
+        }
+
+        webSocket.onmessage = function (event) {
+            console.log('OnMessage: ' + event);
+
+            var placeholder = document.getElementById('ticker');
+            var child = document.createElement('pre');
+            child.innerHTML = event.data;
+            placeholder.insertBefore(child, placeholder.firstChild);
+        }
+    </script>
+</head>
+<body>
+	<span id="status">wss://websockets.independentreserve.com/<strong>orderbook-xbt-aud</strong> events:</span>
+    <div id="ticker"></div>
+</body>
+
+</html>
