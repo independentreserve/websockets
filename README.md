@@ -180,6 +180,7 @@ A heartbeat event is published every 60 seconds. Note: this interval may change 
 
 * Make sure you are using the correct base URL. See [How to connect](#how-to-connect).
 * Make sure that you are using a websockets protocol to open a connection.
+
 If the status description on the response is "WebSockets disabled", the WebSockets server is temporarily unavailable.
 
 ### 400 Status Code
