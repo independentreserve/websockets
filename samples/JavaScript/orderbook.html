@@ -5,7 +5,7 @@
 
     <title>Independent Reserve WebSockets Demo</title>
     <script>
-        var webSocket = new WebSocket('wss://websockets.independentreserve.com/orderbook-xbt-aud');
+        var webSocket = new WebSocket('wss://websockets.independentreserve.com/?subscribe=orderbook-xbt-aud,orderbook-eth-aud');
 
         webSocket.onopen = function () {
             console.log('Connected');
@@ -22,7 +22,7 @@
         }
 
         webSocket.onmessage = function (event) {
-            console.log('OnMessage: ' + event);
+            console.log('OnMessage: ' + event.data);
 
             var placeholder = document.getElementById('ticker');
             var child = document.createElement('pre');
@@ -32,7 +32,7 @@
     </script>
 </head>
 <body>
-	<span id="status">wss://websockets.independentreserve.com/<strong>orderbook-xbt-aud</strong> events:</span>
+	<span id="status"><strong>Order book Bitcoin and Ether events:</strong></span>
     <div id="ticker"></div>
 </body>
 

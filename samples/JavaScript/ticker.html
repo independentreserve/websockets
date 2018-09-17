@@ -5,10 +5,11 @@
 
     <title>Independent Reserve WebSockets Demo</title>
     <script>
-        var webSocket = new WebSocket('wss://websockets.independentreserve.com/ticker-xbt-aud');
+        var webSocket = new WebSocket('wss://websockets.independentreserve.com/');
 
         webSocket.onopen = function () {
             console.log('Connected');
+            webSocket.send('{"Event":"Subscribe", "Data":["ticker-xbt-aud","ticker-eth-aud"]}')
         };
 
         webSocket.onerror = function () {
@@ -22,7 +23,7 @@
         }
 
         webSocket.onmessage = function (event) {
-            console.log('OnMessage: ' + event);
+            console.log('OnMessage: ' + event.data);
 
             var placeholder = document.getElementById('ticker');
             var child = document.createElement('pre');
@@ -32,7 +33,7 @@
     </script>
 </head>
 <body>
-	<span id="status">wss://websockets.independentreserve.com/<strong>ticker-xbt-aud</strong> events:</span>
+    <span id="status"><strong>Order book Bitcoin and Ether events:</strong></span>
     <div id="ticker"></div>
 </body>
 
