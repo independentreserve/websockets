@@ -120,7 +120,6 @@ The OrderCanceled event is published when an order is canceled.
     "Event":"OrderCanceled",
     "Channel": "orderbook-xbt-aud",
     "Data":{
-        "Channel": "orderbook-xbt-aud",
         "OrderGuid":"fa091562-4101-46de-8d66-aeddbeb8795b",
         "PrimaryCurrencyCode":"Xbt",
         "SecondaryCurrencyCode":"Aud",
