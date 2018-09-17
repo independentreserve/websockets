@@ -1,23 +1,36 @@
-## Independent Reserve - WebSockets
+# Independent Reserve - WebSockets
+
 For more details on Independent Reserve's WebSockets API, please refer to [API Documentation](https://www.independentreserve.com/api#websockets)
 
 ## How to connect
+
 WebSocket base url: `wss://websockets.independentreserve.com`
 Message Encoding: `JSON`
 
 ## Available Channels
-There are two channels available over WebSockets: **[orderbook](#orderbook-channel)** channel and **[ticker](#ticker-channel)** channel. 
+
+There are two channels available over WebSockets: **[orderbook](#orderbook-channel)** and **[ticker](#ticker-channel)**.
 Each channel supports subscribing to currency pair events on the channel. See [Subscribing to Channels](#subscribing-to-channels) section for more details.
 
 ## Subscribing to Channels
-Channels can be subscribed to using channel names in the format of `{channel name}-{cryptocurrency}-{fiatcurrency}`.
-Where **{channel name}** is `orderbook` or `ticker`; **{cryptocurrency}** is a [primary currency code](https://www.independentreserve.com/API#GetValidPrimaryCurrencyCodes) and **{fiatcurrency}** is a [secondary currency code](https://www.independentreserve.com/API#GetValidSecondaryCurrencyCodes).
+
+Channels can be subscribed to using channel names in the format of `{channel type}-{cryptocurrency}-{fiatcurrency}`.
+
+Where:
+
+* **{channel type}** is `orderbook` or `ticker`
+* **{cryptocurrency}** is a [primary currency code](https://www.independentreserve.com/API#GetValidPrimaryCurrencyCodes)
+* **{fiatcurrency}** is a [secondary currency code](https://www.independentreserve.com/API#GetValidSecondaryCurrencyCodes)
+
 E.g: `orderbook-xbt-aud`, `ticker-xbt-aud`
 
-Channels can be subscribed to in two ways: 
-1. Using channel names in the csv format in the `subscribe` query string when opening a connection. Eg: `wss://websockets.independentreserve.com?subscribe=orderbook-xbt-aud,ticker-xbt-aud` will subscribe to order book XBT/AUD events and ticker XBT/AUD
-2. Sending a subscribe message once the connection is established. The subscribe message should set **data** property to a string array with channels to subscribe to. 
-#### Subscribe message format
+Subscribing to a channel can be done in two ways:
+
+1. Supplying channel names with the `subscribe` query string when opening a connection. Eg: `wss://websockets.independentreserve.com?subscribe=orderbook-xbt-aud,ticker-xbt-aud` will subscribe to order book XBT/AUD events and ticker XBT/AUD
+2. Sending a subscribe message once the connection is established. The subscribe message should set the **data** property to a string array with the channels to subscribe to.
+
+### Subscribe message format
+
 ```json
 {
     "Event":"Subscribe",
@@ -26,8 +39,11 @@ Channels can be subscribed to in two ways:
 ```
 
 ## Unsubscribing from Channels
-Unsubscribing from a channel is done using a **Unsubscribe** message with **data** property listing channels to unsubscribe from.
-#### Unsubscribe message format
+
+Unsubscribing from a channel is done using an **Unsubscribe** message with the **data** property listing the channels to unsubscribe from.
+
+### Unsubscribe message format
+
 ```json
 {
     "Event":"Unsubscribe",
@@ -36,8 +52,11 @@ Unsubscribing from a channel is done using a **Unsubscribe** message with **data
 ```
 
 ## Subscription Confirmation Event
-Successful subscriptions and unsubscriptions are notified using **Subscriptions** event. **Data* property will list current subscriptions.
-#### Subscriptions event
+
+Successful subscriptions and unsubscriptions are notified via the **Subscriptions** event. The **Data** property will list current subscriptions.
+
+### Subscriptions event
+
 ```json
 {
     "Event":"Subscriptions",
@@ -46,10 +65,13 @@ Successful subscriptions and unsubscriptions are notified using **Subscriptions*
 ```
 
 ## Orderbook Channel
-The order book channel provides real-time order book updates. The order created, canceled and modified events are published on the order book channel.
 
-#### NewOrder - Order Created Event
+The order book channel provides real-time order book updates. Order created, canceled and modified events are published on the order book channel.
+
+### NewOrder - Order Created Event
+
 The NewOrder event is published when a limit order is placed on the order book.
+
 ```json
 {
     "Event":"NewOrder",
@@ -65,10 +87,13 @@ The NewOrder event is published when a limit order is placed on the order book.
         }
 }
 ```
+
 **OrderType** values can be: `LimitBid` or `LimitOffer`
 
-#### OrderChanged - Order modified Event
-The OrderChanged event is published with updated volume when an order is filled or partially filled due to a trade. Fully filled orders will have "Volume":0
+### OrderChanged - Order modified Event
+
+The OrderChanged event is published with updated volume when an order is filled or partially filled due to a trade. Fully filled orders will have `"Volume":0`
+
 ```json
 {
     "Event":"OrderChanged",
@@ -83,10 +108,13 @@ The OrderChanged event is published with updated volume when an order is filled 
         }
 }
 ```
-The only value that can be updated is `Volume`
+
+The only value that can be updated is in a change event is `Volume`.
 
 #### OrderCanceled - Order Cancelled Event
+
 The OrderCanceled event is published when an order is canceled.
+
 ```json
 {
     "Event":"OrderCanceled",
@@ -103,12 +131,15 @@ The OrderCanceled event is published when an order is canceled.
 ```
 
 ## Ticker Channel
+
 The ticker channel provides realtime trade updates. Trade events are published on the ticker channel.
 
-#### Trade Event
+### Trade Event
+
 Trade events are published on every trade. Note: The SecondaryCurrencyCode of a trade event will be the currency the trade is executed in and not the {fiatcurrency} of the channel it is published on. Eg: Subscribing to ticker-xbt-aud will publish trade events with PrimaryCurrencyCode:"Xbt" and SecondaryCurrencyCode:"Aud", "Usd" or "Nzd" depending on the native secondary currency of the trade.
+
 ```json
-{ 
+{
     "Event":"Trade",
     "Channel": "orderbook-xbt-aud",
     "Data":{
@@ -125,14 +156,18 @@ Trade events are published on every trade. Note: The SecondaryCurrencyCode of a 
         }
 }
 ```
+
 **Side** values can be: `Buy` or `Sell`. The **BidGuid** and **OfferGuid** fields match those published in the orderbook channel.
 
 ## Nonce
+
 Each event on a channel will have a nonce. A nonce is an increasing integer value for each channel. A nonce will increase by exactly 1 with every published event on the channel. An increase of more than 1 from the previous event indicates a dropped event. A nonce less than the previous event indicates a reset channel. In both cases it's advised to have logic to ensure the subscriber is in the correct state.
-Nonces are assigned per channel per crypto currency, and are duplicated for each of the fiat currency subscribtions. Eg: **orderbook-xbt-aud** will have the same nonce as the **orderbook-xbt-usd** and **orderbook-xbt-nzd**, but will have a different nonce to **ticker-xbt-aud** or **orderbook-eth-aud**
+Nonces are assigned per channel, per crypto currency and are duplicated for each of the fiat currency subscribtions. Eg: **orderbook-xbt-aud** will have the same nonce as the **orderbook-xbt-usd** and **orderbook-xbt-nzd**, but will have a different nonce to **ticker-xbt-aud** or **orderbook-eth-aud**
 
 ## Heartbeat
-A heartbeat event is published every 60 seconds (note: this interval may change in the future).
+
+A heartbeat event is published every 60 seconds. Note: this interval may change in the future.
+
 ```json
 {
     "Event":"Heartbeat",
@@ -140,20 +175,26 @@ A heartbeat event is published every 60 seconds (note: this interval may change 
 ```
 
 ## Troubleshooting
-#### Getting 404 Status Code
-Make sure you are using the correct base URL. See [How to connect](#how-to-connect). 
-Make sure that you are using a websockets protocol to open a connection. 
+
+### 404 Status Code
+
+* Make sure you are using the correct base URL. See [How to connect](#how-to-connect).
+* Make sure that you are using a websockets protocol to open a connection.
+
 If the status description on the response is "WebSockets disabled", the WebSockets server is temporarily unavailable.
 
-#### Getting 400 Status Code
+### 400 Status Code
+
 If you get status code of 400 when using a subscription query string, check that the query string is in the correct format. See [Subscribing to Channels](#subscribing-to-channels).
 
-#### Error event on subscribing
+### Error event on subscribing
+
 If you get an **Error** event when subscribing, check the error data field for details and check the subscribe format.
 
 ## Samples
 
-#### JavaScript
+### JavaScript
+
 JavaScript native WebSocket support:
 
 ```javascript
@@ -166,4 +207,3 @@ webSocket.onmessage = function (event) {
 JavaScript example: [Source Code](https://github.com/independentreserve/websockets/tree/master/samples/JavaScript)
 
 JavaScript example: [Demo - Live XBT-AUD Orderbook Events](https://independentreserve.github.io/websockets/samples/JavaScript/orderbook.html)
-
