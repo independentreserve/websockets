@@ -140,7 +140,7 @@ Trade events are published on every trade. Note: The SecondaryCurrencyCode of a 
 ```json
 {
     "Event":"Trade",
-    "Channel": "orderbook-xbt-aud",
+    "Channel": "ticker-xbt-aud",
     "Data":{
         "TradeGuid":"c5bde544-d8ae-4e38-9e90-405a3f93b6d6",
         "TradeDate":"2009-01-03T18:15:05.9321664+00:00",
