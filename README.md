@@ -75,15 +75,14 @@ The NewOrder event is published when a limit order is placed on the order book.
 ```json
 {
     "Event":"NewOrder",
-    "Channel": "orderbook-xbt-aud",
+    "Channel":"orderbook-xbt-aud",
+    "Nonce":1,
     "Data":{
         "OrderGuid":"fa091562-4101-46de-8d66-aeddbeb8795b",
-        "PrimaryCurrencyCode":"Xbt",
-        "SecondaryCurrencyCode":"Aud",
+        "Pair":"xbt-aud",
         "Price":10270.31,
         "OrderType":"LimitBid",
-        "Volume":1.0,
-        "Nonce":1
+        "Volume":1.0
         }
 }
 ```
@@ -97,14 +96,13 @@ The OrderChanged event is published with updated volume when an order is filled 
 ```json
 {
     "Event":"OrderChanged",
-    "Channel": "orderbook-xbt-aud",
+    "Channel":"orderbook-xbt-aud",
+    "Nonce":2,
     "Data":{
         "OrderGuid":"fa091562-4101-46de-8d66-aeddbeb8795b",
-        "PrimaryCurrencyCode":"Xbt",
-        "SecondaryCurrencyCode":"Aud",
+        "Pair":"xbt-aud",
         "OrderType":"LimitBid",
-        "Volume":0.5,
-        "Nonce":2
+        "Volume":0.5
         }
 }
 ```
@@ -118,13 +116,12 @@ The OrderCanceled event is published when an order is canceled.
 ```json
 {
     "Event":"OrderCanceled",
-    "Channel": "orderbook-xbt-aud",
+    "Channel":"orderbook-xbt-aud",
+    "Nonce":3,
     "Data":{
         "OrderGuid":"fa091562-4101-46de-8d66-aeddbeb8795b",
-        "PrimaryCurrencyCode":"Xbt",
-        "SecondaryCurrencyCode":"Aud",
-        "OrderType":"LimitBid",
-        "Nonce":3
+        "Pair":"xbt-aud",
+        "OrderType":"LimitBid"
         }
 }
 ```
@@ -135,23 +132,22 @@ The ticker channel provides realtime trade updates. Trade events are published o
 
 ### Trade Event
 
-Trade events are published on every trade. Note: The SecondaryCurrencyCode of a trade event will be the currency the trade is executed in and not the {fiatcurrency} of the channel it is published on. Eg: Subscribing to ticker-xbt-aud will publish trade events with PrimaryCurrencyCode:"Xbt" and SecondaryCurrencyCode:"Aud", "Usd" or "Nzd" depending on the native secondary currency of the trade.
+Trade events are published on every trade. Note: The **Pair** of a trade event will be the currency the trade is executed in and not necessarily the {fiatcurrency} of the channel it is published on. Eg: Subscribing to ticker-xbt-aud will publish trade events with Pair:"xbt-aud" as well as "xbt-usd"  and "xbt-nzd" depending on the native secondary currency of the trade.
 
 ```json
 {
     "Event":"Trade",
-    "Channel": "ticker-xbt-aud",
+    "Channel":"ticker-xbt-aud",
+    "Nonce":1,
     "Data":{
         "TradeGuid":"c5bde544-d8ae-4e38-9e90-405a3f93b6d6",
         "TradeDate":"2009-01-03T18:15:05.9321664+00:00",
         "Volume":50.0,
         "Price":10270.0,
-        "PrimaryCurrencyCode":"Xbt",
-        "SecondaryCurrencyCode":"Aud",
+        "Pair":"xbt-aud",
         "BidGuid":"ebbeca4b-7148-4230-ad8f-833a3ccf35c2",
         "OfferGuid":"ad5ece89-083b-49fc-8bc1-bdb7482a9b9a",
-        "Side":"Buy",
-        "Nonce":1
+        "Side":"Buy"
         }
 }
 ```
