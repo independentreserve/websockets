@@ -109,7 +109,7 @@ The OrderChanged event is published with updated volume when an order is filled 
 
 The only value that can be updated is in a change event is `Volume`.
 
-#### OrderCanceled - Order Cancelled Event
+### OrderCanceled - Order Cancelled Event
 
 The OrderCanceled event is published when an order is canceled.
 
