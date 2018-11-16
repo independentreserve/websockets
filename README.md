@@ -1,6 +1,6 @@
 # Independent Reserve - WebSockets
 
-For more details on Independent Reserve's WebSockets API, please refer to [API Documentation](https://www.independentreserve.com/api#websockets)
+For more details on Independent Reserve's API, please refer to [API Documentation](https://www.independentreserve.com/api)
 
 ## How to connect
 
