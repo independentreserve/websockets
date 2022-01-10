@@ -5,6 +5,7 @@ For more details on Independent Reserve's API, please refer to [API Documentatio
 ## How to connect
 
 WebSocket base url: `wss://websockets.independentreserve.com`
+
 Message Encoding: `JSON`
 
 ## Available Channels
