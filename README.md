@@ -194,15 +194,13 @@ If you get an **Error** event when subscribing, check the error data field for d
 
 ### JavaScript
 
-JavaScript native WebSocket support:
-
 ```javascript
+// Basic example
 var webSocket = new WebSocket('wss://websockets.independentreserve.com/?subscribe=orderbook-xbt');
 webSocket.onmessage = function (event) {
     console.log(event);
 }
 ```
 
-JavaScript example: [Source Code](https://github.com/independentreserve/websockets/tree/master/samples/JavaScript)
-
-JavaScript example: [Demo - Live XBT Orderbook Events](https://independentreserve.github.io/websockets/samples/JavaScript/orderbook.html)
+Also see [/samples/JavaScript](https://github.com/independentreserve/websockets/tree/master/samples/JavaScript) including the
+[live demo of XBT Orderbook Events](https://independentreserve.github.io/websockets/samples/JavaScript/orderbook.html).
