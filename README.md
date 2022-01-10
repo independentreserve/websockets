@@ -10,23 +10,25 @@ Message Encoding: `JSON`
 ## Available Channels
 
 There are two channels available over WebSockets: **[orderbook](#orderbook-channel)** and **[ticker](#ticker-channel)**.
-Each channel supports subscribing to currency pair events on the channel. See [Subscribing to Channels](#subscribing-to-channels) section for more details.
+Each channel supports subscribing to currency events on the channel. See [Subscribing to Channels](#subscribing-to-channels) section for more details.
 
 ## Subscribing to Channels
 
-Channels can be subscribed to using channel names in the format of `{channel type}-{cryptocurrency}-{fiatcurrency}`.
+In order to subscribe to a specific channel you need to specifiy string in the following format:
+
+* For order book channel: `orderbook-{cryptocurrency}`
+* For ticker channel: `ticker-{cryptocurrency}-{fiatcurrency}`
 
 Where:
 
-* **{channel type}** is `orderbook` or `ticker`
 * **{cryptocurrency}** is a [primary currency code](https://www.independentreserve.com/API#GetValidPrimaryCurrencyCodes)
 * **{fiatcurrency}** is a [secondary currency code](https://www.independentreserve.com/API#GetValidSecondaryCurrencyCodes)
 
-E.g: `orderbook-xbt-aud`, `ticker-xbt-aud`
+E.g: `orderbook-xbt`, `ticker-xbt-aud`
 
 Subscribing to a channel can be done in two ways:
 
-1. Supplying channel names with the `subscribe` query string when opening a connection. Eg: `wss://websockets.independentreserve.com?subscribe=orderbook-xbt-aud,ticker-xbt-aud` will subscribe to order book XBT/AUD events and ticker XBT/AUD
+1. Supplying channel names with the `subscribe` query string when opening a connection. Eg: `wss://websockets.independentreserve.com?subscribe=orderbook-xbt,ticker-xbt-aud` will subscribe to order book XBT and ticker XBT/AUD events
 2. Sending a subscribe message once the connection is established. The subscribe message should set the **data** property to a string array with the channels to subscribe to.
 
 ### Subscribe message format
@@ -34,7 +36,7 @@ Subscribing to a channel can be done in two ways:
 ```json
 {
     "Event":"Subscribe",
-    "Data":["orderbook-xbt-aud", "ticker-xbt-aud"]
+    "Data":["orderbook-xbt", "ticker-xbt-aud"]
 }
 ```
 
@@ -47,7 +49,7 @@ Unsubscribing from a channel is done using an **Unsubscribe** message with the *
 ```json
 {
     "Event":"Unsubscribe",
-    "Data":["orderbook-xbt-aud", "ticker-xbt-aud"]
+    "Data":["orderbook-xbt", "ticker-xbt-aud"]
 }
 ```
 
@@ -60,13 +62,13 @@ Successful subscriptions and unsubscriptions are notified via the **Subscription
 ```json
 {
     "Event":"Subscriptions",
-    "Data":["orderbook-xbt-aud", "ticker-xbt-aud"]
+    "Data":["orderbook-xbt", "ticker-xbt-aud"]
 }
 ```
 
 ## Orderbook Channel
 
-The order book channel provides real-time order book updates. Order created, canceled and modified events are published on the order book channel.
+The order book channel provides real-time order book updates. Order created, modified, and canceled events are published on the order book channel.
 
 ### NewOrder - Order Created Event
 
@@ -74,16 +76,20 @@ The NewOrder event is published when a limit order is placed on the order book.
 
 ```json
 {
-    "Event":"NewOrder",
-    "Channel":"orderbook-xbt-aud",
-    "Nonce":1,
+    "Channel":"orderbook-eth",
+    "Nonce":28,
     "Data":{
-        "OrderGuid":"fa091562-4101-46de-8d66-aeddbeb8795b",
-        "Pair":"xbt-aud",
-        "Price":10270.31,
         "OrderType":"LimitBid",
-        "Volume":1.0
-        }
+        "OrderGuid":"dbe7b832-b9b7-4eac-84ce-9f49c2a93b87",
+        "Price":{
+            "aud":2500,
+            "usd":1816.5,
+            "nzd":2587.5,
+            "sgd":2453
+        },
+        "Volume":1
+    },
+    "Event":"NewOrder"
 }
 ```
 
@@ -95,15 +101,14 @@ The OrderChanged event is published with updated volume when an order is filled 
 
 ```json
 {
-    "Event":"OrderChanged",
-    "Channel":"orderbook-xbt-aud",
-    "Nonce":2,
+    "Channel":"orderbook-eth",
+    "Nonce":30,
     "Data":{
-        "OrderGuid":"fa091562-4101-46de-8d66-aeddbeb8795b",
-        "Pair":"xbt-aud",
         "OrderType":"LimitBid",
-        "Volume":0.5
-        }
+        "OrderGuid":"e64fb6e2-a9f8-4f52-95e7-5a3c7a9f8f53",
+        "Volume":0.09646808
+    },
+    "Event":"OrderChanged"
 }
 ```
 
@@ -115,14 +120,13 @@ The OrderCanceled event is published when an order is canceled.
 
 ```json
 {
-    "Event":"OrderCanceled",
-    "Channel":"orderbook-xbt-aud",
-    "Nonce":3,
+    "Channel":"orderbook-eth",
+    "Nonce":29,
     "Data":{
-        "OrderGuid":"fa091562-4101-46de-8d66-aeddbeb8795b",
-        "Pair":"xbt-aud",
-        "OrderType":"LimitBid"
-        }
+        "OrderType":"LimitBid",
+        "OrderGuid":"dbe7b832-b9b7-4eac-84ce-9f49c2a93b87"
+    },
+    "Event":"OrderCanceled"
 }
 ```
 
@@ -132,7 +136,7 @@ The ticker channel provides realtime trade updates. Trade events are published o
 
 ### Trade Event
 
-Trade events are published on every trade. Note: The **Pair** of a trade event will be the currency the trade is executed in and not necessarily the {fiatcurrency} of the channel it is published on. Eg: Subscribing to ticker-xbt-aud will publish trade events with Pair:"xbt-aud" as well as "xbt-usd"  and "xbt-nzd" depending on the native secondary currency of the trade.
+Trade events are published on every trade. Note: The **Pair** of a trade event will be the currency the trade is executed in and not necessarily the `{fiatcurrency}` of the channel it is published on. Eg: Subscribing to `ticker-xbt-aud` will publish trade events with Pair:"xbt-aud" as well as "xbt-usd"  and "xbt-nzd" depending on the native secondary currency of the trade.
 
 ```json
 {
@@ -148,7 +152,7 @@ Trade events are published on every trade. Note: The **Pair** of a trade event w
         "BidGuid":"ebbeca4b-7148-4230-ad8f-833a3ccf35c2",
         "OfferGuid":"ad5ece89-083b-49fc-8bc1-bdb7482a9b9a",
         "Side":"Buy"
-        }
+    }
 }
 ```
 
@@ -193,7 +197,7 @@ If you get an **Error** event when subscribing, check the error data field for d
 JavaScript native WebSocket support:
 
 ```javascript
-var webSocket = new WebSocket('wss://websockets.independentreserve.com/?subscribe=orderbook-xbt-aud');
+var webSocket = new WebSocket('wss://websockets.independentreserve.com/?subscribe=orderbook-xbt');
 webSocket.onmessage = function (event) {
     console.log(event);
 }
@@ -201,4 +205,4 @@ webSocket.onmessage = function (event) {
 
 JavaScript example: [Source Code](https://github.com/independentreserve/websockets/tree/master/samples/JavaScript)
 
-JavaScript example: [Demo - Live XBT-AUD Orderbook Events](https://independentreserve.github.io/websockets/samples/JavaScript/orderbook.html)
+JavaScript example: [Demo - Live XBT Orderbook Events](https://independentreserve.github.io/websockets/samples/JavaScript/orderbook.html)
