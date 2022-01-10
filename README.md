@@ -10,14 +10,15 @@ Message Encoding: `JSON`
 ## Available Channels
 
 There are two channels available over WebSockets: **[orderbook](#orderbook-channel)** and **[ticker](#ticker-channel)**.
-Each channel supports subscribing to currency events on the channel. See [Subscribing to Channels](#subscribing-to-channels) section for more details.
+
+Each channel supports subscribing to currency events.
 
 ## Subscribing to Channels
 
-In order to subscribe to a specific channel you need to specifiy string in the following format:
+To subscribe to a specific channel, construct a string in the following format:
 
-* For order book channel: `orderbook-{cryptocurrency}`
-* For ticker channel: `ticker-{cryptocurrency}-{fiatcurrency}`
+* For order book: `orderbook-{cryptocurrency}`
+* For ticker: `ticker-{cryptocurrency}-{fiatcurrency}`
 
 Where:
 
@@ -93,8 +94,6 @@ The NewOrder event is published when a limit order is placed on the order book.
 }
 ```
 
-**OrderType** values can be: `LimitBid` or `LimitOffer`
-
 ### OrderChanged - Order modified Event
 
 The OrderChanged event is published with updated volume when an order is filled or partially filled due to a trade. Fully filled orders will have `"Volume":0`
@@ -161,11 +160,11 @@ Trade events are published on every trade. Note: The **Pair** of a trade event w
 ## Nonce
 
 Each event on a channel will have a nonce. A nonce is an increasing integer value for each channel. A nonce will increase by exactly 1 with every published event on the channel. An increase of more than 1 from the previous event indicates a dropped event. A nonce less than the previous event indicates a reset channel. In both cases it's advised to have logic to ensure the subscriber is in the correct state.
-Nonces are assigned per channel, per crypto currency and are duplicated for each of the fiat currency subscribtions. Eg: **orderbook-xbt-aud** will have the same nonce as the **orderbook-xbt-usd** and **orderbook-xbt-nzd**, but will have a different nonce to **ticker-xbt-aud** or **orderbook-eth-aud**
+Nonces are assigned per channel, per crypto currency.
 
 ## Heartbeat
 
-A heartbeat event is published every 60 seconds. Note: this interval may change in the future.
+A heartbeat event is published every 60 seconds. This interval may change in the future.
 
 ```json
 {
