@@ -19,18 +19,17 @@ Each channel supports subscribing to currency events.
 To subscribe to a specific channel, construct a string in the following format:
 
 * For order book: `orderbook-{cryptocurrency}`
-* For ticker: `ticker-{cryptocurrency}-{fiatcurrency}`
+* For ticker: `ticker-{cryptocurrency}`
 
 Where:
 
 * **{cryptocurrency}** is a [primary currency code](https://www.independentreserve.com/API#GetValidPrimaryCurrencyCodes)
-* **{fiatcurrency}** is a [secondary currency code](https://www.independentreserve.com/API#GetValidSecondaryCurrencyCodes)
 
-E.g: `orderbook-xbt`, `ticker-xbt-aud`
+E.g: `orderbook-xbt`, `ticker-xbt`
 
 Subscribing to a channel can be done in two ways:
 
-1. Supplying channel names with the `subscribe` query string when opening a connection. Eg: `wss://websockets.independentreserve.com?subscribe=orderbook-xbt,ticker-xbt-aud` will subscribe to order book XBT and ticker XBT/AUD events
+1. Supplying channel names with the `subscribe` query string when opening a connection. Eg: `wss://websockets.independentreserve.com?subscribe=orderbook-xbt,ticker-xbt` will subscribe to order book XBT and ticker XBT events
 2. Sending a subscribe message once the connection is established. The subscribe message should set the **data** property to a string array with the channels to subscribe to.
 
 ### Subscribe message format
@@ -38,7 +37,7 @@ Subscribing to a channel can be done in two ways:
 ```json
 {
     "Event":"Subscribe",
-    "Data":["orderbook-xbt", "ticker-xbt-aud"]
+    "Data":["orderbook-xbt", "ticker-xbt"]
 }
 ```
 
@@ -51,7 +50,7 @@ Unsubscribing from a channel is done using an **Unsubscribe** message with the *
 ```json
 {
     "Event":"Unsubscribe",
-    "Data":["orderbook-xbt", "ticker-xbt-aud"]
+    "Data":["orderbook-xbt", "ticker-xbt"]
 }
 ```
 
@@ -64,7 +63,7 @@ Successful subscriptions and unsubscriptions are notified via the **Subscription
 ```json
 {
     "Event":"Subscriptions",
-    "Data":["orderbook-xbt", "ticker-xbt-aud"]
+    "Data":["orderbook-xbt", "ticker-xbt"]
 }
 ```
 
@@ -136,19 +135,21 @@ The ticker channel provides realtime trade updates. Trade events are published o
 
 ### Trade Event
 
-Trade events are published on every trade. Note: The **Pair** of a trade event will be the currency the trade is executed in and not necessarily the `{fiatcurrency}` of the channel it is published on. Eg: Subscribing to `ticker-xbt-aud` will publish trade events with Pair:"xbt-aud" as well as "xbt-usd"  and "xbt-nzd" depending on the native secondary currency of the trade.
+Trade events are published on every trade.
 
 ```json
 {
     "Event":"Trade",
-    "Channel":"ticker-xbt-aud",
+    "Channel":"ticker-xbt",
     "Nonce":1,
     "Data":{
         "TradeGuid":"c5bde544-d8ae-4e38-9e90-405a3f93b6d6",
         "TradeDate":"2009-01-03T18:15:05.9321664+00:00",
         "Volume":50.0,
-        "Price":10270.0,
-        "Pair":"xbt-aud",
+        "Price":{
+            "Aud":3313.59,
+            "Sgd":4798.92
+        },        
         "BidGuid":"ebbeca4b-7148-4230-ad8f-833a3ccf35c2",
         "OfferGuid":"ad5ece89-083b-49fc-8bc1-bdb7482a9b9a",
         "Side":"Buy"
