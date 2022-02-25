@@ -9,7 +9,7 @@
 
         webSocket.onopen = function () {
             console.log('Connected');
-            webSocket.send('{"Event":"Subscribe", "Data":["ticker-xbt-aud","ticker-eth-aud"]}')
+            webSocket.send('{"Event":"Subscribe", "Data":["ticker-xbt","ticker-eth"]}')
         };
 
         webSocket.onerror = function () {
