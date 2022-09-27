@@ -1,5 +1,6 @@
-## Independent Reserve - WebSockets Examples
-For more details on Independent Reserve's WebSockets API, please refer to [API Documentation](https://www.independentreserve.com/api#websockets)
+# Independent Reserve - WebSockets Examples
+
+For more details on Independent Reserve's WebSockets API, please refer to the parent [readme.md](https://independentreserve.github.io/websockets/)
 
 ## JavaScript WebSockets Demo
 
