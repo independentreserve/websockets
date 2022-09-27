@@ -10,7 +10,7 @@ See [orderbook-ticker.md](orderbook-snapshot.md) for details
 
 ## Order Book Snapshot
 
-The `Order Book Snapshot` protocol is for advanced users who wish to maintain a continuously updated, client side mirror of the Independent Reserve order book to facilitate trading operations.
+The `Order Book Snapshot` protocol is for advanced users who wish to maintain a verifiable, continuously updated, client side mirror of the Independent Reserve order book to facilitate trading operations.
 
 See [orderbook-snapshot.md](orderbook-snapshot.md) for details
 
