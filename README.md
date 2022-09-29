@@ -6,7 +6,7 @@ Independent Reserve supports several web socket protocols for streaming order bo
 
 The `Order Book Ticker` channels are for receiving a stream of `order` and/or `trade` events from the Independent Reserve server.
 
-See [orderbook-ticker.md](orderbook-snapshot.md) for details
+See [orderbook-ticker.md](orderbook-ticker.md) for details
 
 ## Order Book Snapshot
 
