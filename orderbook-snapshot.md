@@ -351,8 +351,6 @@ It is possible to modify a set of current subscriptions without closing existing
 
 Both `OrderBookSnapshot` and `OrderBookChange` messages include a `Crc32` field which contains the CRC32 checksum value calculated by API for the top `10` bids and offers of its version of order book snapshot at the moment when the message was sent. Clients can use the value of this field to check if their version of order book snapshot matches the server version. To do this a client needs to calculate the CRC32 of their version of the order book snapshot (after changes from `OrderBookChange` have been applied) and compare the result with the `Crc32` field value of the applied message.  
 
-We use the [Kraken](https://docs.kraken.com/websockets/#book-checksum) algorithm for calculating the CRC32 for an order book snapshot:
-
 1. To calculate checksum, take the top 10 bids and offers. If there is less than 10 bids or offers use all bids or offers that are present. The ordering of orders is important, the orders must be processed in the order they appear in order book snapshot, i.e. with bids in descending order and offers in ascending;
 1. Both `Price` and `Volume` are used for the calculation and to do it correctly both of them have to be converted to a string with precision of exactly `8` digits after the decimal point, e.g. using `toFixed(8)` in JavaScript or `ToString("F8")` in C#;
 1. For each order:
