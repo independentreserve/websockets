@@ -92,7 +92,7 @@ The NewOrder event is published when a limit order is placed on the order book.
 
 ### OrderChanged - Order modified Event
 
-The OrderChanged event is published with updated volume when an order is filled or partially filled due to a trade. Fully filled orders will have `"Volume":0`
+The OrderChanged event is published with updated volume when an order is filled or partially filled due to a trade.
 
 ```json
 {
@@ -107,7 +107,7 @@ The OrderChanged event is published with updated volume when an order is filled 
 }
 ```
 
-The only value that can be updated is in a change event is `Volume`.
+The only value that can be updated is in a change event is `Volume` which represents the unfilled amount remaining. Fully filled orders will have `"Volume":0`
 
 ### OrderCanceled - Order Cancelled Event
 
