@@ -165,7 +165,7 @@ Trade events are published on every trade.
 Each event on a channel will have a nonce. A nonce is an increasing integer value for each channel. A nonce will increase by exactly 1 with every published event on the channel. An increase of more than 1 from the previous event indicates a dropped event. A nonce less than the previous event indicates a reset channel. In both cases it's advised to have logic to ensure the subscriber is in the correct state.
 Nonces are assigned per channel, per crypto currency.
 
-#Time
+##Time
 Each event contains a `Time` property. It is the unix time of the event in milliseconds.
 
 ## Heartbeat
