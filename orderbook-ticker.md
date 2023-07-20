@@ -59,7 +59,8 @@ Successful subscriptions and unsubscriptions are notified via the **Subscription
 ```json
 {
     "Event":"Subscriptions",
-    "Data":["orderbook-xbt", "ticker-xbt"]
+    "Data":["orderbook-xbt", "ticker-xbt"],
+    "Time":1689718230428
 }
 ```
 
@@ -86,6 +87,7 @@ The NewOrder event is published when a limit order is placed on the order book.
         },
         "Volume":1
     },
+    "Time":1689718320139,
     "Event":"NewOrder"
 }
 ```
@@ -103,6 +105,7 @@ The OrderChanged event is published with updated volume when an order is filled 
         "OrderGuid":"e64fb6e2-a9f8-4f52-95e7-5a3c7a9f8f53",
         "Volume":0.09646808
     },
+    "Time":1689718320138,
     "Event":"OrderChanged"
 }
 ```
@@ -121,6 +124,7 @@ The OrderCanceled event is published when an order is canceled.
         "OrderType":"LimitBid",
         "OrderGuid":"dbe7b832-b9b7-4eac-84ce-9f49c2a93b87"
     },
+    "Time":1689719167720,
     "Event":"OrderCanceled"
 }
 ```
@@ -138,6 +142,7 @@ Trade events are published on every trade.
     "Event":"Trade",
     "Channel":"ticker-xbt",
     "Nonce":1,
+    "Time":1689718320138,
     "Data":{
         "TradeGuid":"c5bde544-d8ae-4e38-9e90-405a3f93b6d6",
         "TradeDate":"2009-01-03T18:15:05.9321664+00:00",
@@ -160,6 +165,9 @@ Trade events are published on every trade.
 Each event on a channel will have a nonce. A nonce is an increasing integer value for each channel. A nonce will increase by exactly 1 with every published event on the channel. An increase of more than 1 from the previous event indicates a dropped event. A nonce less than the previous event indicates a reset channel. In both cases it's advised to have logic to ensure the subscriber is in the correct state.
 Nonces are assigned per channel, per crypto currency.
 
+## Time
+Each event contains a `Time` property. It is the unix time of the event in milliseconds.
+
 ## Heartbeat
 
 A heartbeat event is published every 60 seconds. This interval may change in the future.
@@ -167,6 +175,7 @@ A heartbeat event is published every 60 seconds. This interval may change in the
 ```json
 {
     "Event":"Heartbeat",
+    "Time":1689719100201
 }
 ```
 
