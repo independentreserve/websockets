@@ -119,10 +119,10 @@
 			const current = selection.slice(-1)[0];
 
 			const remaining = current ?
-				pairs.filter(p => selected.every(s => !p.startsWith(s))) :
+				pairs.filter(p => selected.every(s => !p.toLowerCase().startsWith(s.toLowerCase()))) :
 				primaries;
 
-			const hints = remaining.filter(r => r.startsWith(current));
+			const hints = remaining.filter(r => r.toLowerCase().startsWith(current.toLowerCase()));
 
 			const prefix = selected.join(',') + (selected.length > 0 ? ',' : '');
 			list.innerHTML = hints.map(suffix =>`<option value="${prefix}${suffix}">`).join('\n');
