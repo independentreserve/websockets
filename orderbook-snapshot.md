@@ -57,7 +57,7 @@ Where:
 Example:
 
 ```console
-wss://websockets.independentreserve.com/orderbook/100?subscription=btc,eth-aud
+wss://websockets.independentreserve.com/orderbook/100?subscribe=btc,eth-aud
 ```
 
 The server will continue sending WebSocket messages until a client either closes the connection or unsubscribes without closing it using `Unsubscribe` WebSockets message.
