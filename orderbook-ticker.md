@@ -79,6 +79,7 @@ The NewOrder event is published when a limit order is placed on the order book.
     "Data":{
         "OrderType":"LimitBid",
         "OrderGuid":"dbe7b832-b9b7-4eac-84ce-9f49c2a93b87",
+        "ClientId":"113473097470451629",
         "Price":{
             "aud":2500,
             "usd":1816.5,
@@ -103,6 +104,7 @@ The OrderChanged event is published with updated volume when an order is filled 
     "Data":{
         "OrderType":"LimitBid",
         "OrderGuid":"e64fb6e2-a9f8-4f52-95e7-5a3c7a9f8f53",
+        "ClientId":"113473233130758061"
         "Volume":0.09646808
     },
     "Time":1689718320138,
@@ -122,7 +124,8 @@ The OrderCanceled event is published when an order is canceled.
     "Nonce":29,
     "Data":{
         "OrderType":"LimitBid",
-        "OrderGuid":"dbe7b832-b9b7-4eac-84ce-9f49c2a93b87"
+        "OrderGuid":"dbe7b832-b9b7-4eac-84ce-9f49c2a93b87",
+        "ClientId":"113473233130758061"
     },
     "Time":1689719167720,
     "Event":"OrderCanceled"
@@ -153,6 +156,8 @@ Trade events are published on every trade.
         },        
         "BidGuid":"ebbeca4b-7148-4230-ad8f-833a3ccf35c2",
         "OfferGuid":"ad5ece89-083b-49fc-8bc1-bdb7482a9b9a",
+        "BidClientId":"my-own-identifier-123141",
+        "OfferClientId":"113475490148386055",
         "Side":"Buy"
     }
 }
@@ -166,7 +171,8 @@ Each event on a channel will have a nonce. A nonce is an increasing integer valu
 Nonces are assigned per channel, per crypto currency.
 
 ## Time
-Each event contains a `Time` property. It is the unix time of the event in milliseconds.
+
+Each event contains a `Time` property. It is the Unix time of the event in milliseconds.
 
 ## Heartbeat
 
@@ -178,6 +184,14 @@ A heartbeat event is published every 60 seconds. This interval may change in the
     "Time":1689719100201
 }
 ```
+
+## ClientId
+
+When placing orders via our API, customers can specify their own `ClientId` to a maximum of 36 characters. The ClientId is reflected in the websockets datastream and may be used to react in an event driven way to events related to their orders.
+
+The ClientId is named `OfferClientId` and `BidClientId` in the ticker channel.
+
+When a ClientId has not been supplied, it is omitted from the data structure.
 
 ## Troubleshooting
 
